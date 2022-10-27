@@ -1,0 +1,77 @@
+
+
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: nginx-website
+  namespace: toy-example
+  labels:
+    app: website
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      app: website
+  template:
+    metadata:
+      labels:
+        app: website
+    spec:
+      containers:
+      - env:
+        image: quay.io/igou/igou.io-nginx:latest
+        imagePullPolicy: Always
+        name: igou-website
+        ports:
+        - containerPort: 80
+        livenessProbe:
+          httpGet:
+            scheme: HTTP
+            path: /
+            port: 80
+          initialDelaySeconds: 30
+          timeoutSeconds: 30
+        volumeMounts:
+        - mountPath: /etc/nginx/conf.d/nginx-status.conf
+          name: nginx-status-conf
+          readOnly: true
+          subPath: nginx.status.conf
+      - name: nginx-exporter
+        image: 'nginx/nginx-prometheus-exporter:0.3.0'
+        args:
+          - '-nginx.scrape-uri=http://localhost:8090/nginx_status'
+        ports:
+          - name: nginx-ex-port
+            containerPort: 9113
+            protocol: TCP
+        imagePullPolicy: Always
+      volumes:
+      - configMap:
+          defaultMode: 420
+          name: nginx-status-conf
+        name: nginx-status-conf
+
+---
+
+
+apiVersion: v1
+kind: Service
+metadata:
+  labels:
+    app: website
+  name: nginx-website
+  namespace: toy-example
+spec:
+  ports:
+  - port: 80
+    protocol: TCP
+    targetPort: 80
+    name: http
+  - port: 9113
+    protocol: TCP
+    targetPort: 9113
+    name: metrics
+  selector:
+    app: website
+  sessionAffinity: None
+  type: ClusterIP

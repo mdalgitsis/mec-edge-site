@@ -1,0 +1,7 @@
+mongodb:
+  uri: "mongodb://mongodb-service:27017"
+
+serviceMonitor:
+  namespace: toy-example
+  additionalLabels:
+    release: prometheus-mec

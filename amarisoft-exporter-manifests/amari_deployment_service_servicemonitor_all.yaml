@@ -1,0 +1,75 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: deployment-amarisoft-exporter-all
+  namespace: amarisoft
+  labels:
+    app: amari-exporter-all
+spec:
+  selector:
+    matchLabels:
+      app: amari-exporter-all
+  template:
+    metadata:
+      labels:
+        app: amari-exporter-all
+    spec:
+      containers:
+      - name: collectd-exporter
+        image: medianetlab/collectd
+        imagePullPolicy: Always
+        ports:
+        - containerPort: 9103
+        volumeMounts:
+        - mountPath: /etc/collectd
+          name: data-folder-all
+        - mountPath: /usr/share/collectd/types.db
+          name: types-file-all
+      restartPolicy: Always
+      volumes:
+      - name: data-folder-all
+        hostPath:
+          path: /home/ubuntu/amarisoft-prometheus-exporter-collectd_20220225/collectd/data
+          type: Directory
+      - name: types-file-all
+        hostPath: 
+          path: /home/ubuntu/amarisoft-prometheus-exporter-collectd_20220225/collectd/data/types.db
+          type: File
+
+---
+
+apiVersion: v1
+kind: Service
+metadata:
+  labels:
+    app: amari-exporter-all
+  name: service-amarisoft-exporter-all
+  namespace: amarisoft
+spec:
+  ports:
+  - port: 9103
+    protocol: TCP
+    targetPort: 9103
+    name: metrics
+  selector:
+    app: amari-exporter-all
+  type: ClusterIP
+
+---
+
+apiVersion: monitoring.coreos.com/v1
+kind: ServiceMonitor
+metadata:
+  name: amarisoft-exporter-all
+  namespace: amarisoft
+  labels:
+    release: prometheus-mec
+spec:
+  selector:
+    matchLabels:
+      app: amari-exporter-all
+  endpoints:
+  - port: metrics
+    interval: 5s
+
+     

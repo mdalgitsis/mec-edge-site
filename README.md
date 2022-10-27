@@ -1419,7 +1419,7 @@ A high-level block representation with all the BIND5G components is presented he
 
 ![](miscellaneous/high_level_bind5g_model.png)
 
-Functionalities such as auto-scalling K8s cluster resources with OSM and edge-slicing with KNFs will be discussed and described on the future, on an aupdated version of the current document. 
+Functionalities such as scalling K8s cluster resources with OSM and deploying helm-chart with KNFs are discussed and described on the Edge OpenAPI section. 
 
 
 

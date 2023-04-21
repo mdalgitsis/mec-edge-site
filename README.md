@@ -1,6 +1,6 @@
-# MEC site with a K8s cluster and a Prometheus monitoring server
+# Edge site with a K8s cluster and a Prometheus monitoring server
 
-Basque Industry 5G (B-IND5G) project proposes a multi-access edge computing (MEC) use-case for the communication of IoT devices over a 5G network for the Industry4.0 vertical sector. The MEC site is a server and service provider closer to the end user (IoT) and implements an Industry4.0 management and orchestration (MANO) system to increase the performance by:
+The MEC site is a server and service provider closer to the end user (IoT) and implements an Industry4.0 management and orchestration (MANO) system to increase the performance by:
 - hosting microservices (Applications containerized)
 - monitoring infrastructure, applications and communication resources
 - processing monitored metrics
@@ -894,7 +894,7 @@ Second, we need the ws.js application, which can be found in one of the folders 
        machine that hosts the K8s cluster or any other machine with
        linux terminal:
 
-	   scp user@192.168.15.209:/root/enb/doc/ws.js /home/ubuntu/amarisoft-websocket/
+	   scp user@192.168.0.1:/root/enb/doc/ws.js /home/ubuntu/amarisoft-websocket/
 
 If the command failes due to security reasons, we can follow a reverse approach:
 
@@ -909,19 +909,19 @@ If the command failes due to security reasons, we can follow a reverse approach:
 
  - [ ] Copy the app from the Amarisoft server and paste it in the amarisoft-websocket folder to the machine that runs the K8s cluster or any other machine with linix terminal:
 
-	   scp user@192.168.15.209:/tmp/ws.js /home/ubuntu/amarisoft-websocket
+	   scp user@192.168.0.1:/tmp/ws.js /home/ubuntu/amarisoft-websocket
 
 Then, we have to navigate to the folder where the ws.js application is `cd amarisoft-websocket`, and to request messages.
 
  - [ ] Request a config_get messages to gNB (5G Base Station):
 
-	   ./ws.js 192.168.15.209:9001 '{"message": "config_get"}'
+	   ./ws.js 192.168.0.1:9001 '{"message": "config_get"}'
 
  
 
  - [ ] Request a config_get messagea to mme (5GCore):
 
-	   ./ws.js 192.168.15.209:9000 '{"message": "config_get"}'
+	   ./ws.js 192.168.0.1:9000 '{"message": "config_get"}'
 
 > **Note:** Other message-types we can request are: stats, ue_get, logs_get
 
@@ -1406,14 +1406,6 @@ Following the above steps, the MEC site with the K8s cluster looks like this:
 A graphical illustration of the integration of the MEC and the OSM alongside with their monitoring components of the BIND5G architecture is shown in the figure below:
 
 ![](miscellaneous/MEC_OSM_interaction.png)
-
-- MEC listens to a VM with ip 192.168.15.178 of the small-scale Openstack server
-- MEC-Prometheus server listens to a pod with ip 192.168.15.178:30090
-- MEC-Grafana listens to a pod with ip 192.168.15.178:10296 and with the following credentials: user: admin, password: prom-operator
-- Amarisoft exporter pod, which is running in MEC, is configured to connect with large-scale 5g network (192.168.15.209) to request core and radio metrics
-- OSM-Prometheus pod listens to 192.168.15.172:9091 from Vicomtech´s internal network
-- OSM-Grafana pod listens 192.168.15.172:3000 from Vicomtech´s internal network
-- --k8s_monitor add-on installs another Prometheus server to monitor the cluster that hosts OSM in the monitoring namespace and this Prometheus pod Prometheus pod listens to 192.168.15.172:30090 from Vicomtech´s internal network
 
 A high-level block representation with all the BIND5G components is presented here, where the red arrows show how OSM manages and orchestrates the whole arcitecture:
 

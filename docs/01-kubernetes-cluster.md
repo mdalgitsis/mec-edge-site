@@ -40,6 +40,26 @@ kubectl is the command line tool for communicating with a Kubernetes cluster's c
 
 ## Kubernetes components installation (kubelet, kubectl, kubeadm)
 
+> **⚠️ These two commands no longer work.** The Google-hosted Kubernetes apt repository
+> (`apt.kubernetes.io` / `packages.cloud.google.com/apt`) was **deprecated in 2023 and has since been switched
+> off** — `https://apt.kubernetes.io/dists/kubernetes-xenial/Release` now returns 404, so `apt-get update` fails
+> and nothing installs. `apt-key` is also deprecated on modern Debian/Ubuntu.
+>
+> The replacement is the community-hosted `pkgs.k8s.io`, with the key stored in a keyring rather than `apt-key`.
+> Pick the minor version you want — the repository is versioned, so there is no "latest" across minors:
+>
+> ```bash
+> K8S_MINOR=v1.31
+> sudo mkdir -p /etc/apt/keyrings
+> curl -fsSL "https://pkgs.k8s.io/core:/stable:/${K8S_MINOR}/deb/Release.key" \
+>   | sudo gpg --dearmor -o /etc/apt/keyrings/kubernetes-apt-keyring.gpg
+> echo "deb [signed-by=/etc/apt/keyrings/kubernetes-apt-keyring.gpg] https://pkgs.k8s.io/core:/stable:/${K8S_MINOR}/deb/ /" \
+>   | sudo tee /etc/apt/sources.list.d/kubernetes.list
+> sudo apt-get update
+> ```
+>
+> The original 2022 commands are kept below for the record.
+
  - [ ] Get the Kubernetes gpg key:
 
        curl -s https://packages.cloud.google.com/apt/doc/apt-key.gpg | sudo apt-key add -
@@ -95,7 +115,7 @@ The K8s cluster to be added later on and integrates with OSM must fullfil the fo
 
 - installation and configuration of a load balancer for the cluster
 - installation of a persistent volume storage (openebs) and define it as the default storageclass
-- special permission of Tiller
+- a Tiller permission, per the OSM documentation - but read the warning below before applying it
 
 Metallb is a very powerful, easy to configure, load balancer for kubernetes. 
 
@@ -134,6 +154,12 @@ addresses:
 ```
 > **Note:** Visual studio code is an efficient IDE to syntax yaml manifests
 
+> **⚠️ This ConfigMap format no longer works on current MetalLB.** It was removed in **v0.13.0** (2022) and
+> replaced by the `IPAddressPool` and `L2Advertisement` custom resources. Applying the ConfigMap to a modern
+> MetalLB is silently ignored — the install looks fine and your `LoadBalancer` services simply stay `<pending>`.
+> Use [`manifests/metallb/ipaddresspool.yaml`](../manifests/metallb/ipaddresspool.yaml) instead; the original
+> ConfigMap is kept as [`configmap-legacy.yaml`](../manifests/metallb/configmap-legacy.yaml) for MetalLB ≤ 0.12.
+
  - [ ] Create the configuration_metallb.yaml file
  - [ ] Apply the file into the cluster:
 
@@ -161,12 +187,25 @@ addresses:
 
 	   kubectl get storageclass
 
- - [ ] For Kubernetes clusters > 1.15 there is needed special permission
-       of Tiller that can be added by the following command:
+ - [ ] For Kubernetes clusters > 1.15 the OSM documentation asks for a
+       Tiller permission, added with:
 
 	   kubectl create clusterrolebinding tiller-cluster-admin --clusterrole=cluster-admin --serviceaccount=kube-system:default
 
-> **Note:** It is possible the Tiller permission to be already configured in the latest versions of K8s.
+> **⚠️ Do not run this without understanding it.** This grants `cluster-admin` to the **default ServiceAccount in
+> `kube-system`**. Every pod scheduled into `kube-system` that does not name its own ServiceAccount then runs with
+> full cluster privileges. It was the shortcut Helm 2 deployments copy-pasted, and it is a privilege escalation
+> waiting to happen.
+>
+> **It is also very likely unnecessary.** Tiller was Helm **v2**'s in-cluster component and was removed entirely
+> in Helm v3 (November 2019). OSM Release ELEVEN — the release installed in
+> [the OSM integration guide](05-osm-integration.md) — uses Helm v3, and this guide installs `helm-v3.6.2`
+> further on. The requirement appears to be vestigial text carried forward in the OSM documentation, where it is
+> still listed as of Release THIRTEEN.
+>
+> Try registering the cluster **without** it first. If `osm k8scluster-add` succeeds, you never needed it. If you
+> do need to grant something, bind a dedicated ServiceAccount with the narrowest role that works rather than
+> handing `cluster-admin` to `kube-system:default`.
 
 ## K8s cluster basic configuration
 

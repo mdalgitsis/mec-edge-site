@@ -3,7 +3,7 @@
 
 ## Installing OSM
 
-[OSM installation](https://osm.etsi.org/docs/user-guide/03-installing-osm.html) is based on a K8s cluster deployment. OSM installer creates by default a K8s cluster and inside of it creates a Namespace *osm*. Under the Namespace *osm* lies OSM with its elements. Some of these elements are OSM CLI, OSM GUI, MON, Prometheus, and Grafana.
+[OSM installation](https://osm.etsi.org/docs/test-user-guide/v13/03-installing-osm/) is based on a K8s cluster deployment. OSM installer creates by default a K8s cluster and inside of it creates a Namespace *osm*. Under the Namespace *osm* lies OSM with its elements. Some of these elements are OSM CLI, OSM GUI, MON, Prometheus, and Grafana.
 
  - [ ] Commands for installing OSM:
 
@@ -35,6 +35,9 @@ OSM installation can include add-ons (extra components), if options are added on
  - [ ] Clone the master branch of the OSM devops repo
 
 	   git clone http://osm.etsi.org/gerrit/osm/devops.git
+
+> **Note:** OSM moved off Gerrit — that URL now 404s. Use the GitLab mirror instead:
+> `git clone https://osm.etsi.org/gitlab/osm/devops.git`
 
  - [ ] Install the monitoring component
 
@@ -88,9 +91,9 @@ where the options:
 
 As a result, a K8s cluster can be deployed under or outside the VIM´s network. 
 
-Under a VIM´s network the cluster is connected to OSM through the hosted VIM and is deployed following the instructions of Method 1 and 2 of [ANNEX 7: Kubernetes installation and requirements](https://osm.etsi.org/docs/user-guide/15-k8s-installation.html) of OSM´s official documentation.
+Under a VIM´s network the cluster is connected to OSM through the hosted VIM and is deployed following the instructions of Method 1 and 2 of [ANNEX 7: Kubernetes installation and requirements](https://osm.etsi.org/docs/test-user-guide/v13/15-k8s-installation/) of OSM´s official documentation.
 
-Outside of the VIM´s network the cluster is connected to OSM through the Dummy VIM and is deployed as Annex 7, [Method 3: Manual cluster installation steps for Ubuntu](https://osm.etsi.org/docs/user-guide/15-k8s-installation.html).
+Outside of the VIM´s network the cluster is connected to OSM through the Dummy VIM and is deployed as Annex 7, [Method 3: Manual cluster installation steps for Ubuntu](https://osm.etsi.org/docs/test-user-guide/v13/15-k8s-installation/).
 
 Since, the K8s cluster of the MEC site is implemented following the Method 3, we can add the MEC/K8s cluster by executing the following command:
 

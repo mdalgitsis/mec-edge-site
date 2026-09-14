@@ -1,0 +1,20 @@
+# MetalLB v0.13.0 and later. The ConfigMap format in configmap-legacy.yaml was
+# removed in v0.13 in favour of these CRDs; applying the old ConfigMap to a
+# current MetalLB is silently ignored, and services stay <pending>.
+apiVersion: metallb.io/v1beta1
+kind: IPAddressPool
+metadata:
+  name: default
+  namespace: metallb-system
+spec:
+  addresses:
+    - 192.0.2.20-192.0.2.250   # replace with a range your network owns
+---
+apiVersion: metallb.io/v1beta1
+kind: L2Advertisement
+metadata:
+  name: default
+  namespace: metallb-system
+spec:
+  ipAddressPools:
+    - default

@@ -85,6 +85,10 @@ A Prometheus server can be installed either as a binary or as a container. In a 
 
 	   helm help
 	   helm repo add stable https://charts.helm.sh/stable
+
+> **Note:** the `stable` chart repository was **deprecated in November 2020** and is frozen — it still answers,
+> but receives no updates. Charts now live in each project's own repository; the Prometheus stack used later in
+> this guide comes from `prometheus-community`.
 	   helm repo update
 	   helm repo list
 	   helm list
@@ -139,6 +143,12 @@ By using helm charts as in the Prometheus case we simplify the deployment of kub
  - [ ] Add helm repo and install it in *monitoring* Namespace
 
 	   helm repo add kube-eagle https://raw.githubusercontent.com/cloudworkz/kube-eagle-helm-chart/master
+
+> **⚠️ This chart repository is gone** — the URL now returns 404, so `helm repo add` fails. **kube-eagle itself is
+> archived and unmaintained.** Its job was per-pod resource-request-vs-usage metrics; today
+> [kube-state-metrics](https://github.com/kubernetes/kube-state-metrics) (bundled with kube-prometheus-stack)
+> exposes the same `kube_pod_container_resource_requests` and `_limits` series, so this step can simply be
+> skipped on a modern stack.
 	   helm repo update    
 	   helm install kube-eagle kube-eagle/kube-eagle -n monitoring --create-namespace
 	   helm upgrade kube-eagle kube-eagle/kube-eagle -n monitoring --set serviceMonitor.create=true --set serviceMonitor.releaseLabel=prometheus-mec

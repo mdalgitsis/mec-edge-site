@@ -50,7 +50,9 @@ exporters/      The per-UE Amarisoft collectd plugins written for this project
 ## The Edge-API
 
 A REST API that sits between a higher-level NaaS API and the cluster, so experiments can be deployed and managed
-remotely without handing out kubeconfigs. **OpenAPI 3.0, version 1.0.2, 32 paths, 46 operations** —
+remotely without handing out kubeconfigs. That northbound NaaS API — which drives radio, core and edge together
+and delegates the Kubernetes half to this one — is in
+**[mdalgitsis/BIND5G](https://github.com/mdalgitsis/BIND5G)**. **OpenAPI 3.0, version 1.0.2, 32 paths, 46 operations** —
 [`api/edge-api.yaml`](api/edge-api.yaml), with the full endpoint reference in [`api/README.md`](api/README.md).
 
 | Group | What it does |
@@ -110,7 +112,9 @@ durable parts.
 
 ## Acknowledgements
 
-Developed under the **BIND5G** project at **[Vicomtech](https://www.vicomtech.org/)**.
+Developed under the **BIND5G** project at **[Vicomtech](https://www.vicomtech.org/)**. The wider project work —
+the NaaS API, Thanos cross-site federation and the WireGuard federation this site sat inside — is in
+[mdalgitsis/BIND5G](https://github.com/mdalgitsis/BIND5G).
 
 The Amarisoft Prometheus exporter this work builds on is
 **[amarisoft-prometheus-exporter-collectd](https://github.com/core-ncsrd/amarisoft-prometheus-exporter-collectd)**

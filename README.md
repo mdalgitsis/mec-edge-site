@@ -83,11 +83,14 @@ Content-Type: application/json
 ### Reuse outside this project
 
 A 19-path predecessor of this specification — the BIND5G **Scaling API** — was later reused as the Kubernetes
-actuator in a *separate* project: Team Pedraforca's entry at the ETSI/LF MEC Hackathon 2022, and the IEEE CSCN
-2022 demo paper that came out of it ([arXiv:2211.13995](https://arxiv.org/abs/2211.13995)). That is different
-work by a different team, with its own goals and its own code in
-[`RasoulNik/mec_sandbox`](https://github.com/RasoulNik/mec_sandbox); it is noted here only because it is where
-this API's scaling endpoints were first exercised.
+actuator in a *separate* project: Team Pedraforca's entry at the
+[ETSI / Linux Foundation MEC Hackathon 2022](https://mecwiki.etsi.org/index.php?title=Hack2022_2nd_Prize),
+which **won 2nd prize**, and the IEEE CSCN 2022 demo paper that came out of it
+([arXiv:2211.13995](https://arxiv.org/abs/2211.13995)). There, an ETSI MEC Location API feed drove a decision
+engine that scaled a video-on-demand application through this API's `scaleHorizontal` endpoint.
+
+That entry was separate work by a different team, with its own goals, and its source is not public. It is noted
+here because it is where these scaling endpoints were first exercised in anger.
 
 The specification is the deliverable. The swagger-codegen Python client and Flask server that were generated from
 it have been removed — they were machine output, they outnumbered the hand-written files five to one, and

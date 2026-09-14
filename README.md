@@ -1,5 +1,6 @@
 # MEC Edge Site on Kubernetes
 
+[![ETSI MEC Hackathon 2022](https://img.shields.io/badge/ETSI%20MEC%20Hackathon%202022-2nd%20Prize-C9B037)](https://mecwiki.etsi.org/index.php?title=Hack2022_2nd_Prize)
 [![License](https://img.shields.io/badge/License-Apache%202.0-blue.svg)](LICENSE)
 [![Kubernetes](https://img.shields.io/badge/Kubernetes-kubeadm-326CE5?logo=kubernetes&logoColor=white)](https://kubernetes.io)
 [![Prometheus](https://img.shields.io/badge/Monitoring-Prometheus-E6522C?logo=prometheus&logoColor=white)](https://prometheus.io)
@@ -93,6 +94,36 @@ And the place of this site within the wider BIND5G architecture — red arrows s
 orchestrates:
 
 ![High-level BIND5G model](docs/images/high_level_bind5g_model.png)
+
+## Recognition
+
+The API in this repository has a direct ancestor: a 19-path **Scaling API**, built under BIND5G to horizontally
+and vertically scale Kubernetes workloads on demand. That component was the Kubernetes actuator in a
+prize-winning ETSI demo.
+
+> 🥈 **2nd Prize — [ETSI/Linux Foundation MEC Hackathon 2022](https://mecwiki.etsi.org/index.php?title=Hack2022_2nd_Prize)**
+> *"Virtualized mobile and edge infrastructures with OpenAPI integrations"* — Team **Pedraforca**,
+> CTTC and Vicomtech: Rasoul Nikbakht Silab, Michail Dalgitsis, Sarang Kahvazadeh, Sergio Barrachina-Muñoz.
+
+The hackathon entry integrated the **MEC012 Radio Network Information Service (RNIS)** API with a commercial
+Amarisoft RAN, mapping its proprietary WebSocket interface onto RNIS, and ran Open5GS network functions as
+containers on Kubernetes with UPFs at the edge hosting an Akraino virtual-classroom AR/VR application. An
+ML-based decision engine consumed the MEC APIs to scale workloads against latency and bandwidth targets.
+
+A related demo by the same team was published at **IEEE CSCN 2022**:
+
+> **[3]** R. Nikbakht, M. Dalgitsis, S. Barrachina-Muñoz, S. Kahvazadeh,
+> "Mobile Edge Vertical Applications Using ETSI MEC APIs and Sandbox,"
+> *2022 IEEE Conference on Standards for Communications and Networking (CSCN)*, Demo.
+> [arXiv:2211.13995](https://arxiv.org/abs/2211.13995)
+
+There, the ETSI **MEC Sandbox** and its **Location API** supplied the number of users in a zone, and a decision
+engine scaled a video-on-demand application through the same Kubernetes OpenAPI — the pattern this repository's
+`scaleHorizontal` and `scaleVertical` endpoints exist to serve.
+
+The demo code lives in the team repository
+[`RasoulNik/mec_sandbox`](https://github.com/RasoulNik/mec_sandbox); it carries no license, so it is linked
+rather than reproduced here.
 
 ## Known limitations
 

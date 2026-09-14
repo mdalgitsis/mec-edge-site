@@ -49,26 +49,37 @@ exporters/      The per-UE Amarisoft collectd plugins written for this project
 
 ## The Edge-API
 
-[`api/edge-api.yaml`](api/edge-api.yaml) specifies a REST API that sits between a higher-level NaaS API and the
-cluster, so experiments can be deployed and managed remotely without handing out kubeconfigs. **32 paths, 46
-operations**, in three groups:
+A REST API that sits between a higher-level NaaS API and the cluster, so experiments can be deployed and managed
+remotely without handing out kubeconfigs. **OpenAPI 3.0, version 1.0.2, 32 paths, 46 operations** —
+[`api/edge-api.yaml`](api/edge-api.yaml), with the full endpoint reference in [`api/README.md`](api/README.md).
 
-- **`/cluster/*`** — read-only inventory across all namespaces: nodes and their status, pods, deployments,
-  services, ServiceMonitors, ResourceQuotas, LimitRanges.
-- **`/namespaces/*`** — full lifecycle for namespaces, pods (including logs), deployments, services,
-  ServiceMonitors, quotas and limit ranges. Deployments also expose
-  **`scaleHorizontal`** (replica count) and **`scaleVertical`** (per-container CPU/memory), which is what lets an
-  external optimiser reshape workloads in response to the metrics collected above.
-- **`/kns/*`** — Kubernetes Network Services: list, create and delete Helm-chart-based KNFs through **ETSI OSM**,
-  plus `day2actions` for post-deployment operations.
+| Group | What it does |
+|---|---|
+| **`/cluster/*`** | Read-only inventory across all namespaces — nodes and node status, pods, deployments, services, ServiceMonitors, ResourceQuotas, LimitRanges |
+| **`/namespaces/*`** | Full lifecycle for namespaces, pods (including logs), deployments, services, ServiceMonitors, quotas and limit ranges |
+| **`/kns/*`** | Kubernetes Network Services — create, list and delete Helm-chart KNFs through **ETSI OSM**, plus `day2actions` |
 
-The spec is the deliverable here; the swagger-codegen Python client and Flask server stubs that were generated
-from it have been removed, since they were machine output that can be regenerated at any time:
+The part that makes it more than a kubectl wrapper is **scaling**. Deployments expose `scaleHorizontal` (replica
+count) and `scaleVertical` (per-container CPU and memory), which is what closes the loop with the monitoring
+stack: an external optimiser reads the Prometheus metrics gathered above — including the radio-layer ones — and
+reshapes workloads in response.
 
-```bash
-docker run --rm -v "$PWD:/local" openapitools/openapi-generator-cli generate \
-  -i /local/api/edge-api.yaml -g python-flask -o /local/out
+```http
+PATCH /namespaces/default/deployments/nginx-deployment/nginx/scaleVertical
+Content-Type: application/json
+
+{
+  "container_resource_requests_cpu_value":    "50m",
+  "container_resource_requests_memory_value": "32Mi",
+  "container_resource_limits_cpu_value":      "100m",
+  "container_resource_limits_memory_value":   "64Mi",
+  "deployment_selector": {}
+}
 ```
+
+The specification is the deliverable. The swagger-codegen Python client and Flask server that were generated from
+it have been removed — they were machine output, they outnumbered the hand-written files five to one, and
+[`api/README.md`](api/README.md) shows how to regenerate either on demand.
 
 ## Architecture
 

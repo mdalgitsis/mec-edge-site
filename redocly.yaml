@@ -1,0 +1,16 @@
+# Lint configuration for the Edge-API specification.
+extends:
+  - recommended
+
+rules:
+  # The Edge-API was designed to sit on a private network behind the BIND5G
+  # NaaS API, which handled authentication, so the specification defines no
+  # securitySchemes. That is a real limitation rather than an oversight in the
+  # document, and it is recorded as such in api/README.md - the rule is
+  # disabled here so CI checks the spec's structure without re-reporting a
+  # known design decision 46 times.
+  security-defined: off
+
+  # servers[] deliberately lists localhost: the API is deployed next to the
+  # cluster it manages and has no public host.
+  no-server-example.com: off

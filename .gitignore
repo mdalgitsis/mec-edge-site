@@ -1,0 +1,14 @@
+# Generated API clients and servers - regenerate from api/edge-api.yaml
+out/
+generated/
+*-generated/
+
+# Python
+__pycache__/
+*.py[cod]
+
+# Editors & OS
+.vscode/
+.idea/
+.DS_Store
+*.swp

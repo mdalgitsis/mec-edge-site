@@ -1,6 +1,7 @@
 # MEC Edge Site on Kubernetes
 
 [![ETSI MEC Hackathon 2022](https://img.shields.io/badge/ETSI%20MEC%20Hackathon%202022-2nd%20Prize-C9B037)](https://mecwiki.etsi.org/index.php?title=Hack2022_2nd_Prize)
+[![validate](https://github.com/mdalgitsis/mec-edge-site/actions/workflows/validate.yml/badge.svg)](https://github.com/mdalgitsis/mec-edge-site/actions/workflows/validate.yml)
 [![License](https://img.shields.io/badge/License-Apache%202.0-blue.svg)](LICENSE)
 [![Kubernetes](https://img.shields.io/badge/Kubernetes-kubeadm-326CE5?logo=kubernetes&logoColor=white)](https://kubernetes.io)
 [![Prometheus](https://img.shields.io/badge/Monitoring-Prometheus-E6522C?logo=prometheus&logoColor=white)](https://prometheus.io)
